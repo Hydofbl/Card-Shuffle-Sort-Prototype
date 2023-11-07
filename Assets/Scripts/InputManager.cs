@@ -2,19 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Change name of this script and move card dealing methods to new inputmanager.
 public class InputManager : MonoBehaviour
 {
-    public Transform StartTransform;
+    [Header("Card Dealing")]
     public GameObject CardPref;
+    public Transform StartTransform;
+    public Transform CardParent;
+    [Range(0f, 1f)]
+    public float cardDealWaitDuration = 0.2f;
 
     private bool _hasPrevPos;
-    private Vector3 _previousPos;
-
-    private void Start()
-    {
-        // unnecessary
-        _previousPos = Vector3.zero;
-    }
+    private CardHolderScript _selectedHolder;
 
     void Update()
     {
@@ -37,35 +36,79 @@ public class InputManager : MonoBehaviour
         {
             if (hit.collider.gameObject.TryGetComponent<CardHolderScript>(out CardHolderScript holder))
             {
-                if (!_hasPrevPos)
+                if (_hasPrevPos)
                 {
-                    _hasPrevPos = true;
-                    _previousPos = holder.GetCardPos();
+                    // if same holder selected again
+                    if(holder == _selectedHolder)
+                    {
+                        ClearSelected();
+                        return;
+                    }
+
+                    FlipCard(holder);
+
+                    ClearSelected();
                 }
                 else
                 {
-                    Debug.Log(holder.GetCardPos());
-
-                    CardAnimationManager.Instance.Flip(holder.GetTopCard(), _previousPos, holder.GetCardPos(), new Vector3(180f, 0f, 0f));
-
-                    _hasPrevPos = false;
+                    if (holder.GetQueueCount() > 0)
+                    {
+                        _hasPrevPos = true;
+                        _selectedHolder = holder;
+                    }
+                    else
+                    {
+                        // There is no card to move
+                    }
                 }
             }
             else
             {
-                _hasPrevPos = false;
+                ClearSelected();
             }
+        }
+        else
+        {
+            ClearSelected();
         }
     }
 
     public void DealCards()
     {
-        foreach(var holder in GameManager.Instance.cardHolders)
+        StartCoroutine(DealCardCoroutine());
+    }
+
+    public IEnumerator DealCardCoroutine()
+    {
+        foreach (var holder in GameManager.Instance.cardHolders)
         {
-            GameObject card = Instantiate(CardPref, StartTransform.position, Quaternion.identity);
-            holder.AddCard(card);
+            // Check for dealed card amounth
+
+            Card card = Instantiate(CardPref, StartTransform.localPosition, Quaternion.identity, CardParent.transform).GetComponent<Card>();
 
             CardAnimationManager.Instance.Move(card.transform, holder.GetCardPos());
+
+            holder.AddCard(card);
+
+            yield return new WaitForSeconds(cardDealWaitDuration);
         }
+    }
+
+    private void ClearSelected()
+    {
+        _hasPrevPos = false;
+        _selectedHolder = null;
+    }
+
+    private void FlipCard(CardHolderScript holder)
+    {
+        Vector3 targetPos = holder.GetCardPos();
+        Vector3 rotation = new Vector3(180f, 0f, 0f);
+        Vector3 selectedHolderPos = _selectedHolder.GetCardPos();
+        Card selectedCard = _selectedHolder.GetTopCard();
+
+        CardAnimationManager.Instance.Flip(selectedCard.transform, selectedHolderPos, targetPos, rotation);
+
+        holder.AddCard(selectedCard);
     }
 }

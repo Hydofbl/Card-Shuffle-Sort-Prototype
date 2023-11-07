@@ -4,25 +4,29 @@ using UnityEngine;
 
 public class CardHolderScript : MonoBehaviour
 {
-    public Queue<GameObject> CardQueue = new Queue<GameObject>();
+    // Stored card queue
+    private Stack<Card> CardQueue = new Stack<Card>();
 
-
-    // X position changing
     private Vector3 cardPosOffset = new Vector3(0f, 0.1f, 0.1f);
 
     public Vector3 GetCardPos()
     {
-        // if the card is first card of holder, then just add vectoral offset, else add full offset
-        return CardQueue.Count > 0 ? transform.position + cardPosOffset * CardQueue.Count : transform.position + new Vector3(0f, cardPosOffset.y, 0f);
+        // For first card we just use vertical offset, so offset.y's coefficient starts with one surplus
+        return transform.position + new Vector3(0f, cardPosOffset.y * (CardQueue.Count + 1), cardPosOffset.z * CardQueue.Count);
     }
 
-    public void AddCard(GameObject card)
+    public void AddCard(Card card)
     {
-        CardQueue.Enqueue(card);
+        CardQueue.Push(card);
     }
 
-    public Transform GetTopCard()
+    public Card GetTopCard()
     {
-        return CardQueue.Dequeue().transform;
+        return CardQueue.Pop();
+    }
+
+    public int GetQueueCount()
+    {
+        return CardQueue.Count;
     }
 }

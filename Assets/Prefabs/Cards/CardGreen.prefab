@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 5927879225044241203}
   - component: {fileID: 5927879225044241200}
   - component: {fileID: 444300333031123427}
-  m_Layer: 0
-  m_Name: CardBlue
-  m_TagString: Untagged
+  - component: {fileID: 7117408437678793933}
+  m_Layer: 6
+  m_Name: CardGreen
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -840,7 +841,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f83114909ea0d7247a11a24890de78b4, type: 2}
+  - {fileID: 2100000, guid: 6fb1fb985d2428a4d84761f3d9b32b89, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -882,4 +883,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b297ba599e11f56419c7d4dd2bdf1cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 0
+  Type: 2
+  CardPrice: 10
+--- !u!65 &7117408437678793933
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5927879225044241206}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8588737, y: 0.02, z: 1.2775489}
+  m_Center: {x: 0, y: 0, z: 0}

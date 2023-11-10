@@ -6,7 +6,6 @@ using UnityEngine;
 // Change name of this script and move card dealing methods to new inputmanager.
 public class InputManager : MonoBehaviour
 {
-
     private bool _hasPrevPos;
     private CardHolderScript _selectedHolder;
 
@@ -43,12 +42,12 @@ public class InputManager : MonoBehaviour
             }
             else
             {
-                ClearSelected();
+                ClearSelected(false);
             }
         }
         else
         {
-            ClearSelected();
+            ClearSelected(false);
         }
     }
 
@@ -59,52 +58,52 @@ public class InputManager : MonoBehaviour
             // if same holder selected again
             if (currentHolder == _selectedHolder)
             {
-                ClearSelected();
+                ClearSelected(false);
                 return;
             }
 
             // if selectedholder's top card's type did not equals to target holder's top card's type
-            if (currentHolder.GetQueueCount() > 0 && !_selectedHolder.GetTopCardType().Equals(currentHolder.GetTopCardType()))
+            if (currentHolder.GetListCount() > 0 && !_selectedHolder.GetTopCardType().Equals(currentHolder.GetTopCardType()))
             {
-                ClearSelected();
+                ClearSelected(false);
                 return;
             }
 
             // if target holder's cards moving, we can not select it
             if (currentHolder.AreCardsMoving)
             {
-                ClearSelected();
                 return;
             }
 
             if(currentHolder.CompareTag("CardSeller") && currentHolder.GetComponent<CardSellerScript>().IsSellingCards)
             {
-                ClearSelected();
+                ClearSelected(false);
                 return;
             }
 
             StartCoroutine(CardManager.Instance.FlipCards(_selectedHolder, currentHolder));
 
-            ClearSelected();
+            ClearSelected(true);
         }
         else
         {
             if (currentHolder.AreCardsMoving)
             {
-                ClearSelected();
                 return;
             }
 
             if (currentHolder.CompareTag("CardSeller") && currentHolder.GetComponent<CardSellerScript>().IsSellingCards)
             {
-                ClearSelected();
                 return;
             }
 
-            if (currentHolder.GetQueueCount() > 0)
+            if (currentHolder.GetListCount() > 0)
             {
                 _hasPrevPos = true;
                 _selectedHolder = currentHolder;
+
+
+                StartCoroutine(CardManager.Instance.RiseUpCards(currentHolder));
             }
             else
             {
@@ -113,8 +112,13 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void ClearSelected()
+    private void ClearSelected(bool flipping)
     {
+        if(_hasPrevPos && _selectedHolder && !flipping)
+        {
+            StartCoroutine(CardManager.Instance.DescendCards(_selectedHolder));
+        }
+
         _hasPrevPos = false;
         _selectedHolder = null;
     }

@@ -17,30 +17,41 @@ public class CardSellerScript : CardHolderScript
     private void Update()
     {
         // Instead of checking it for every frame, card selling could turn to an action
-        if(!IsSellingCards && cardQueue.Count >= MinCardLimitToSell && !AreCardsMoving)
+        if (!IsSellingCards && cardList.Count >= MinCardLimitToSell && !AreCardsMoving)
         {
             IsSellingCards = true;
 
             StartCoroutine(SellCards());
         }
     }
+
     public override void AddCard(Card card)
     {
         base.AddCard(card);
 
-        FillImage.fillAmount = cardQueue.Count > MinCardLimitToSell ? 1 : (float)cardQueue.Count/MinCardLimitToSell;
+        FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
+    }
+
+    public override Card GetTopCard()
+    {
+        Card card = cardList[cardList.Count - 1];
+        cardList.Remove(card);
+
+        FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
+        return card;
     }
 
     private IEnumerator SellCards()
     {
-        while (cardQueue.Count > 0)
+        while (cardList.Count > 0)
         {
-            Card selledCard = cardQueue.Pop();
+            Card soldCard = cardList[cardList.Count - 1];
+            cardList.Remove(soldCard);
 
-            GameManager.Instance.AddCoin(selledCard.CardPrice);
-            Destroy(selledCard.gameObject);
+            GameManager.Instance.AddCoin(soldCard.CardPrice);
+            Destroy(soldCard.gameObject);
 
-            FillImage.fillAmount = cardQueue.Count > MinCardLimitToSell ? 1 : (float)cardQueue.Count / MinCardLimitToSell;
+            FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
 
             yield return new WaitForSeconds(CardSellWaitDuration);
         }

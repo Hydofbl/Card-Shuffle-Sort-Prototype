@@ -16,6 +16,10 @@ public class CardManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float cardDealWaitDuration = 0.2f;
 
+    [Header("Card Ascend/Descend")]
+    [Range(0f, 1f)]
+    [SerializeField] private float ascendDescendDuration = 0f;
+
     public bool HasDealingCard;
 
     public static CardManager Instance;
@@ -56,14 +60,23 @@ public class CardManager : MonoBehaviour
 
             yield return new WaitForSeconds(nextCardFlipDuration);
         }
-        while (selectedHolder.GetQueueCount() > 0 && selectedHolder.GetTopCardType().Equals(flippedCardType));
+        while (selectedHolder.GetListCount() > 0 && selectedHolder.GetTopCardType().Equals(flippedCardType));
 
-        lastTween.OnComplete(() =>
+        if(targetHolder.CompareTag("CardSeller"))
+        {
+            selectedHolder.AreCardsMoving = false;
+
+            // wait last tween to complete before selling cards
+            lastTween.OnComplete(() =>
+            {
+                targetHolder.AreCardsMoving = false;
+            });
+        }
+        else
         {
             selectedHolder.AreCardsMoving = false;
             targetHolder.AreCardsMoving = false;
-        });
-
+        }
     }
 
     private Vector3 GetTargetRotation(Vector3 startPos, Vector3 targetPos)
@@ -97,7 +110,10 @@ public class CardManager : MonoBehaviour
 
             Card card = Instantiate(CardPrefs[Random.Range(0, CardPrefs.Count)], dealStartTransform.localPosition, Quaternion.identity, cardParent.transform).GetComponent<Card>();
 
-            CardAnimationManager.Instance.Move(card.transform, holder.GetCardPos());
+            Vector3 rotation = GetTargetRotation(dealStartTransform.position, holder.GetCardPos());
+            Vector3 targetPos = holder.GetCardPos();
+
+            CardAnimationManager.Instance.Flip(card.transform, dealStartTransform.position, targetPos, rotation);
 
             holder.AddCard(card);
 
@@ -105,5 +121,43 @@ public class CardManager : MonoBehaviour
         }
 
         HasDealingCard = false;
+    }
+
+    public IEnumerator RiseUpCards(CardHolderScript selectedHolder)
+    {
+        CardHolderScript cardHolder = selectedHolder;
+
+        CardType RiseUppedCardType = cardHolder.GetTopCardType();
+
+        foreach(Card card in selectedHolder.GetCardList())
+        {
+            CardAnimationManager.Instance.Ascend(card.transform);
+
+            if(!cardHolder.GetTopCardType().Equals(RiseUppedCardType))
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(ascendDescendDuration);
+        }
+    }
+
+    public IEnumerator DescendCards(CardHolderScript selectedHolder)
+    {
+        CardHolderScript cardHolder = selectedHolder;
+
+        CardType RiseUppedCardType = cardHolder.GetTopCardType();
+
+        foreach (Card card in selectedHolder.GetCardList())
+        {
+            CardAnimationManager.Instance.Descend(card.transform);
+
+            if (!cardHolder.GetTopCardType().Equals(RiseUppedCardType))
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(ascendDescendDuration);
+        }
     }
 }

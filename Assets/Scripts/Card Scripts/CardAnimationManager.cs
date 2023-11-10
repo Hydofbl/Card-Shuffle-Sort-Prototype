@@ -10,6 +10,9 @@ public class CardAnimationManager : MonoBehaviour
     [Range(0f, 1f)]
     public float FlipAnimDuration = 0.75f;
 
+    [Range(0f, 1f)]
+    public float AscendDescendAnimDuration = 0f;
+
     public static CardAnimationManager Instance;
 
     private void Start()
@@ -38,5 +41,19 @@ public class CardAnimationManager : MonoBehaviour
     public void Move(Transform cardTransform, Vector3 targetPos)
     {
         cardTransform.DOMove(targetPos, FlipAnimDuration);
+    }
+
+    public void Ascend(Transform cardTransform)
+    {
+        Vector3 cardPosition = cardTransform.position;
+
+        cardTransform.DOMove(new Vector3(cardPosition.x, cardPosition.y + 0.5f, cardPosition.z), AscendDescendAnimDuration);
+    }
+
+    public void Descend(Transform cardTransform)
+    {
+        Vector3 cardPosition = cardTransform.position;
+
+        cardTransform.DOMove(new Vector3(cardPosition.x, cardPosition.y - 0.5f, cardPosition.z), AscendDescendAnimDuration);
     }
 }

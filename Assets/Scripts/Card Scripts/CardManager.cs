@@ -1,7 +1,9 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class CardManager : MonoBehaviour
 {
@@ -11,8 +13,10 @@ public class CardManager : MonoBehaviour
 
     [Header("Card Dealing")]
     public List<GameObject> CardPrefs;
+    public bool HasDealingCard;
     [SerializeField] private Transform dealStartTransform;
     [SerializeField] private Transform cardParent;
+    [SerializeField] private int dealCardAmount = 4;
     [Range(0f, 1f)]
     [SerializeField] private float cardDealWaitDuration = 0.2f;
 
@@ -20,7 +24,10 @@ public class CardManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float ascendDescendDuration = 0f;
 
-    public bool HasDealingCard;
+    public bool AnyCardRemover
+    {
+        get { return GameManager.Instance.cardHolders.Any(holder => holder.IsRemovingExtras); }
+    }
 
     public static CardManager Instance;
 
@@ -54,6 +61,7 @@ public class CardManager : MonoBehaviour
             Vector3 selectedHolderPos = selectedHolder.GetCardPos();
             Card selectedCard = selectedHolder.GetTopCard();
 
+            selectedCard.GetComponent<BoxCollider>().enabled = false;
             lastTween = CardAnimationManager.Instance.Flip(selectedCard.transform, selectedHolderPos, targetPos, rotation);
 
             targetHolder.AddCard(selectedCard);
@@ -104,39 +112,56 @@ public class CardManager : MonoBehaviour
     {
         HasDealingCard = true;
 
-        foreach (var holder in GameManager.Instance.cardHolders)
+        Tween lastTween = null;
+        List<CardHolderScript> cardHolders = GameManager.Instance.cardHolders;
+
+        cardHolders.ForEach(holder => { holder.AreCardsMoving = true; });
+
+        foreach (var holder in cardHolders)
         {
-            // Check for dealed card amount
-
-            Card card = Instantiate(CardPrefs[Random.Range(0, CardPrefs.Count)], dealStartTransform.localPosition, Quaternion.identity, cardParent.transform).GetComponent<Card>();
-
             Vector3 rotation = GetTargetRotation(dealStartTransform.position, holder.GetCardPos());
-            Vector3 targetPos = holder.GetCardPos();
 
-            CardAnimationManager.Instance.Flip(card.transform, dealStartTransform.position, targetPos, rotation);
+            for (int i = 0; i < dealCardAmount; i++)
+            {
+                Card card = Instantiate(CardPrefs[Random.Range(0, CardPrefs.Count)], dealStartTransform.localPosition, Quaternion.identity, cardParent.transform).GetComponent<Card>();
+                
+                Vector3 targetPos = holder.GetCardPos();
 
-            holder.AddCard(card);
+                lastTween = CardAnimationManager.Instance.Flip(card.transform, dealStartTransform.position, targetPos, rotation);
 
-            yield return new WaitForSeconds(cardDealWaitDuration);
+                holder.AddCard(card);
+
+                yield return new WaitForSeconds(cardDealWaitDuration);
+            }
         }
 
-        HasDealingCard = false;
+        lastTween.OnComplete(() => {
+            DOTween.KillAll();
+            cardHolders.ForEach(holder => { 
+                holder.AreCardsMoving = false; 
+                holder.CheckExtraCards(); 
+                HasDealingCard = false; 
+            }); 
+        });
     }
 
     public IEnumerator RiseUpCards(CardHolderScript selectedHolder)
     {
+        // Sometimes selectedHolder becomes null because of other parallel processes.
+        // So we copy it.
         CardHolderScript cardHolder = selectedHolder;
 
         CardType RiseUppedCardType = cardHolder.GetTopCardType();
+        List<Card> cards = cardHolder.GetCardList();
 
-        foreach(Card card in selectedHolder.GetCardList())
+        for (int i = cards.Count - 1; i >= 0; i--)
         {
-            CardAnimationManager.Instance.Ascend(card.transform);
-
-            if(!cardHolder.GetTopCardType().Equals(RiseUppedCardType))
+            if (!cards[i].Type.Equals(RiseUppedCardType))
             {
                 break;
             }
+
+            CardAnimationManager.Instance.Ascend(cards[i].transform);
 
             yield return new WaitForSeconds(ascendDescendDuration);
         }
@@ -144,18 +169,21 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator DescendCards(CardHolderScript selectedHolder)
     {
+        // Sometimes selectedHolder becomes null because of other parallel processes.
+        // So we copy it.
         CardHolderScript cardHolder = selectedHolder;
 
         CardType RiseUppedCardType = cardHolder.GetTopCardType();
+        List<Card> cards = cardHolder.GetCardList();
 
-        foreach (Card card in selectedHolder.GetCardList())
+        for (int i = cards.Count - 1; i >= 0; i--)
         {
-            CardAnimationManager.Instance.Descend(card.transform);
-
-            if (!cardHolder.GetTopCardType().Equals(RiseUppedCardType))
+            if (!cards[i].Type.Equals(RiseUppedCardType))
             {
                 break;
             }
+
+            CardAnimationManager.Instance.Descend(cards[i].transform);
 
             yield return new WaitForSeconds(ascendDescendDuration);
         }

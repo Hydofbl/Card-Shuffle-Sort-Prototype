@@ -113,10 +113,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AreCardsMoving: 0
   cardPosOffset: {x: 0, y: 0.2, z: 0}
+  maxCardAmount: 15
+  isRemovingExtras: 0
+  CardRemoveWaitDuration: 0.5
   MinCardLimitToSell: 10
   CardSellWaitDuration: 0.1
-  IsSellingCards: 0
   FillImage: {fileID: 5416660391990476973}
+  cardSellEffect: {fileID: 6719523675499762520, guid: 2fe4ab9a3d9740143a364e0fe26f5c6b, type: 3}
+  IsSellingCards: 0
 --- !u!1 &5416660391990476975
 GameObject:
   m_ObjectHideFlags: 0

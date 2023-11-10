@@ -75,7 +75,14 @@ public class InputManager : MonoBehaviour
                 return;
             }
 
+            // if card holder is either a card seller, then check if there is any selling card activity
             if(currentHolder.CompareTag("CardSeller") && currentHolder.GetComponent<CardSellerScript>().IsSellingCards)
+            {
+                ClearSelected(false);
+                return;
+            }
+
+            if(currentHolder.IsRemovingExtras)
             {
                 ClearSelected(false);
                 return;
@@ -102,7 +109,6 @@ public class InputManager : MonoBehaviour
                 _hasPrevPos = true;
                 _selectedHolder = currentHolder;
 
-
                 StartCoroutine(CardManager.Instance.RiseUpCards(currentHolder));
             }
             else
@@ -125,7 +131,7 @@ public class InputManager : MonoBehaviour
 
     public void DealCards()
     {
-        if(!CardManager.Instance.HasDealingCard)
+        if(!CardManager.Instance.HasDealingCard && !CardManager.Instance.AnyCardRemover)
         {
             StartCoroutine(CardManager.Instance.DealCardCoroutine());
         }

@@ -10,8 +10,11 @@ public class CardAnimationManager : MonoBehaviour
     [Range(0f, 1f)]
     public float FlipAnimDuration = 0.75f;
 
+    [Header("Card Ascend/Descend")]
+    [SerializeField] private float ascendDescendHeight = 0.5f;
     [Range(0f, 1f)]
-    public float AscendDescendAnimDuration = 0f;
+    [SerializeField] private float AscendDescendAnimDuration = 0.25f;
+
 
     public static CardAnimationManager Instance;
 
@@ -34,8 +37,13 @@ public class CardAnimationManager : MonoBehaviour
         Vector3[] pathValues = {startPos, midPoint, endPos };
 
         return cardTransform.DOPath(pathValues, FlipAnimDuration, PathType.CatmullRom)
-            .OnStart(() => { cardTransform.DORotate(rotation, FlipAnimDuration)
-                .OnComplete(() => { cardTransform.rotation = Quaternion.identity; }); });
+            .OnStart(() => { 
+                cardTransform.DORotate(rotation, FlipAnimDuration)
+                .OnComplete(() => { 
+                    cardTransform.rotation = Quaternion.identity;
+                    cardTransform.GetComponent<BoxCollider>().enabled = true;
+                }); 
+            });
     }
 
     public void Move(Transform cardTransform, Vector3 targetPos)
@@ -47,13 +55,13 @@ public class CardAnimationManager : MonoBehaviour
     {
         Vector3 cardPosition = cardTransform.position;
 
-        cardTransform.DOMove(new Vector3(cardPosition.x, cardPosition.y + 0.5f, cardPosition.z), AscendDescendAnimDuration);
+        cardTransform.DOMove(new Vector3(cardPosition.x, cardPosition.y + ascendDescendHeight, cardPosition.z), AscendDescendAnimDuration);
     }
 
     public void Descend(Transform cardTransform)
     {
         Vector3 cardPosition = cardTransform.position;
 
-        cardTransform.DOMove(new Vector3(cardPosition.x, cardPosition.y - 0.5f, cardPosition.z), AscendDescendAnimDuration);
+        cardTransform.DOMove(new Vector3(cardPosition.x, cardPosition.y - ascendDescendHeight, cardPosition.z), AscendDescendAnimDuration);
     }
 }

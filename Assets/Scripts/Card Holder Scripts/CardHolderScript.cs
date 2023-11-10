@@ -8,27 +8,14 @@ public class CardHolderScript : MonoBehaviour
     public bool AreCardsMoving;
     [SerializeField] private Vector3 cardPosOffset = new Vector3(0f, 0.2f, 0f);
     [SerializeField] private int maxCardAmount = 15;
-    [SerializeField] private bool isRemovingExtras;
 
+    [Header("Extra Card Removing")]
+    public bool IsRemovingExtras;
     [Range(0f, 1f)]
     [SerializeField] private float CardRemoveWaitDuration = 0.5f;
 
     // Stored card queue
     protected List<Card> cardList = new List<Card>();
-
-    private void Update()
-    {
-        // WIP: Extra card remover
-        /*
-        // Instead of checking it for every frame, card selling could turn to an action
-        if (!isRemovingExtras && !AreCardsMoving && cardList.Count >= maxCardAmount)
-        {
-            isRemovingExtras = true;
-
-            StartCoroutine(RemoveExtras());
-        }
-        */
-    }
 
     public Vector3 GetCardPos()
     {
@@ -76,22 +63,27 @@ public class CardHolderScript : MonoBehaviour
         return cardList.Count;
     }
 
-    // WIP
+    public void CheckExtraCards()
+    {
+        // Extra card remover
+        // Instead of checking it for every frame, extra card remover could turn to an action
+        if (!IsRemovingExtras && !AreCardsMoving && cardList.Count >= maxCardAmount)
+        {
+            IsRemovingExtras = true;
+
+            StartCoroutine(RemoveExtras());
+        }
+    }
+
     private IEnumerator RemoveExtras()
     {
         while (cardList.Count > maxCardAmount)
         {
-            Card removedCard = GetBottomCard();
+            Card removedCard = GetTopCard();
             Destroy(removedCard.gameObject);
-
-
-            // We need to find a way to move top cards to below
-
-
-
             yield return new WaitForSeconds(CardRemoveWaitDuration);
         }
 
-        isRemovingExtras = false;
+        IsRemovingExtras = false;
     }
 }

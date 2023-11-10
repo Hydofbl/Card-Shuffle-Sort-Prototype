@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -148,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.71000004
+      value: -0.46000004
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -196,13 +200,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.75
+      value: -1.25
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.y
@@ -210,7 +218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.71000004
+      value: -0.46000004
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -258,13 +266,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.75
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.y
@@ -272,7 +284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.71000004
+      value: -0.46000004
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -578,6 +590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   YOffset: 2
   FlipAnimDuration: 0.75
+  ascendDescendHeight: 0.5
   AscendDescendAnimDuration: 0.25
 --- !u!114 &736652070
 MonoBehaviour:
@@ -591,14 +604,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c85e40a2a06ec2418444b193e9bcb75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextCardFlipDuration: 0.1
+  nextCardFlipDuration: 0.05
   CardPrefs:
-  - {fileID: 5927879225044241206, guid: 902c2c4f51b1b4a488cf31f81b2adc91, type: 3}
+  - {fileID: 579636078220572520, guid: 902c2c4f51b1b4a488cf31f81b2adc91, type: 3}
+  - {fileID: 579636078220572520, guid: 09ba1149f7f1c564986a7283063e3d0f, type: 3}
+  - {fileID: 579636078220572520, guid: 64de5638d5c4f0048a4bae563b03bae8, type: 3}
+  - {fileID: 579636078220572520, guid: cd10b6569a8f0f2408aa09f427cf0a13, type: 3}
+  HasDealingCard: 0
   dealStartTransform: {fileID: 1532971609}
   cardParent: {fileID: 1268528126}
+  dealCardAmount: 4
   cardDealWaitDuration: 0.15
   ascendDescendDuration: 0
-  HasDealingCard: 0
 --- !u!1001 &763897060
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -609,6 +626,10 @@ PrefabInstance:
     - target: {fileID: 4874700385234075426, guid: f5d8997667165d441aff07cf675e4f87, type: 3}
       propertyPath: m_Name
       value: CardSeller (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874700385234075426, guid: f5d8997667165d441aff07cf675e4f87, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4874700385234075454, guid: f5d8997667165d441aff07cf675e4f87, type: 3}
       propertyPath: m_RootOrder
@@ -1390,13 +1411,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.75
+      value: -1.25
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1404,7 +1429,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.44
+      value: 1.69
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1626,13 +1651,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.75
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1640,7 +1669,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.44
+      value: 1.69
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1688,6 +1717,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1702,7 +1735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.44
+      value: 1.69
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1755,6 +1788,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardHolder
       objectReference: {fileID: 0}
+    - target: {fileID: 2955805044794154634, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1769,7 +1806,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.5
+      value: 3.75
       objectReference: {fileID: 0}
     - target: {fileID: 2955805044794154646, guid: 1f0408a3675011b48b82ff8c55e5ff53, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1811,6 +1848,10 @@ PrefabInstance:
     - target: {fileID: 4874700385234075426, guid: f5d8997667165d441aff07cf675e4f87, type: 3}
       propertyPath: m_Name
       value: CardSeller
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874700385234075426, guid: f5d8997667165d441aff07cf675e4f87, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4874700385234075454, guid: f5d8997667165d441aff07cf675e4f87, type: 3}
       propertyPath: m_RootOrder

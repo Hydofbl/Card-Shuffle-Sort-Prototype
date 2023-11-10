@@ -10,9 +10,10 @@ public class CardSellerScript : CardHolderScript
 
     [Range(0f, 1f)]
     [SerializeField] private float CardSellWaitDuration = 0.5f;
+    [SerializeField] private Image FillImage;
+    [SerializeField] private ParticleSystem cardSellEffect;
 
     public bool IsSellingCards;
-    public Image FillImage;
 
     private void Update()
     {
@@ -29,7 +30,7 @@ public class CardSellerScript : CardHolderScript
     {
         base.AddCard(card);
 
-        FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
+        FillCardAmountIndicator();
     }
 
     public override Card GetTopCard()
@@ -37,7 +38,7 @@ public class CardSellerScript : CardHolderScript
         Card card = cardList[cardList.Count - 1];
         cardList.Remove(card);
 
-        FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
+        FillCardAmountIndicator();
         return card;
     }
 
@@ -49,13 +50,27 @@ public class CardSellerScript : CardHolderScript
             cardList.Remove(soldCard);
 
             GameManager.Instance.AddCoin(soldCard.CardPrice);
+
+            PlaySellEffect(soldCard);
             Destroy(soldCard.gameObject);
 
-            FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
+            FillCardAmountIndicator();
 
             yield return new WaitForSeconds(CardSellWaitDuration);
         }
 
         IsSellingCards = false;
+    }
+
+    private void FillCardAmountIndicator()
+    {
+        FillImage.fillAmount = cardList.Count > MinCardLimitToSell ? 1 : (float)cardList.Count / MinCardLimitToSell;
+    }
+
+    private void PlaySellEffect(Card soldCard)
+    {
+        var psMain = cardSellEffect.main;
+        psMain.startColor = soldCard.GetComponent<Renderer>().material.color;
+        Destroy(Instantiate(cardSellEffect, soldCard.transform.position, Quaternion.identity), psMain.startLifetime.constantMax);
     }
 }

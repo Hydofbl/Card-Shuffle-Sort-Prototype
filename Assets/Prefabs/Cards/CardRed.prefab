@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 579636078220572525}
   - component: {fileID: 6657782062152422845}
   - component: {fileID: 579636078220572523}
+  - component: {fileID: 313310133641340408}
   m_Layer: 6
   m_Name: CardRed
   m_TagString: Card
@@ -2625,3 +2626,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.58845913, y: 0.10130428, z: 1.1500278}
   m_Center: {x: -0.000000059604645, y: 0, z: 0}
+--- !u!33 &313310133641340408
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579636078220572520}
+  m_Mesh: {fileID: 0}

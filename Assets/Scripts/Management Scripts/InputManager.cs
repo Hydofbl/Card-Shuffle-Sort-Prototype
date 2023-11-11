@@ -75,13 +75,14 @@ public class InputManager : MonoBehaviour
                 return;
             }
 
-            // if card holder is either a card seller, then check if there is any selling card activity
+            // if card holder is a card seller check if there is any selling card activity
             if(currentHolder.CompareTag("CardSeller") && currentHolder.GetComponent<CardSellerScript>().IsSellingCards)
             {
                 ClearSelected(false);
                 return;
             }
 
+            // if holders removing any cards
             if(currentHolder.IsRemovingExtras)
             {
                 ClearSelected(false);
@@ -94,11 +95,13 @@ public class InputManager : MonoBehaviour
         }
         else
         {
+            // if target holder's cards moving, we can not select it
             if (currentHolder.AreCardsMoving)
             {
                 return;
             }
 
+            // if card holder is a card seller check if there is any selling card activity
             if (currentHolder.CompareTag("CardSeller") && currentHolder.GetComponent<CardSellerScript>().IsSellingCards)
             {
                 return;

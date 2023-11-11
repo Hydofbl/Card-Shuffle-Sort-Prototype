@@ -75,6 +75,7 @@ public class CardHolderScript : MonoBehaviour
         }
     }
 
+    // Note: it removes from top, on original game cards removing from bottom.
     private IEnumerator RemoveExtras()
     {
         while (cardList.Count > maxCardAmount)

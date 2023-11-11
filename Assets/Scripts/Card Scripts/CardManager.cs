@@ -3,17 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class CardManager : MonoBehaviour
 {
+    [Header("Card Holder")]
+    public List<CardHolderScript> CardHolders = new List<CardHolderScript>();
+
     [Header("Card Flip")]
     [Range(0f, 1f)]
     [SerializeField] private float nextCardFlipDuration = 0.1f;
 
     [Header("Card Dealing")]
-    public List<GameObject> CardPrefs;
     public bool HasDealingCard;
+    public List<GameObject> CardPrefs;
     [SerializeField] private Transform dealStartTransform;
     [SerializeField] private Transform cardParent;
     [SerializeField] private int dealCardAmount = 4;
@@ -26,7 +28,7 @@ public class CardManager : MonoBehaviour
 
     public bool AnyCardRemover
     {
-        get { return GameManager.Instance.cardHolders.Any(holder => holder.IsRemovingExtras); }
+        get { return CardHolders.Any(holder => holder.IsRemovingExtras); }
     }
 
     public static CardManager Instance;
@@ -36,11 +38,17 @@ public class CardManager : MonoBehaviour
         if(Instance != null && Instance != this)
         {
             Destroy(this);
+            return;
         }
         else
         {
             Instance = this;
         }
+
+        // Find and add all CardHolder object by their scripts into the cardHolders list. Additionally check for tags.
+        CardHolders.AddRange(FindObjectsOfType<CardHolderScript>().Where(holder => holder.CompareTag("CardHolder")));
+
+        StartCoroutine(DealCardCoroutine());
     }
 
     public IEnumerator FlipCards(CardHolderScript selectedHolder, CardHolderScript targetHolder)
@@ -113,11 +121,10 @@ public class CardManager : MonoBehaviour
         HasDealingCard = true;
 
         Tween lastTween = null;
-        List<CardHolderScript> cardHolders = GameManager.Instance.cardHolders;
 
-        cardHolders.ForEach(holder => { holder.AreCardsMoving = true; });
+        CardHolders.ForEach(holder => { holder.AreCardsMoving = true; });
 
-        foreach (var holder in cardHolders)
+        foreach (var holder in CardHolders)
         {
             Vector3 rotation = GetTargetRotation(dealStartTransform.position, holder.GetCardPos());
 
@@ -137,7 +144,7 @@ public class CardManager : MonoBehaviour
 
         lastTween.OnComplete(() => {
             DOTween.KillAll();
-            cardHolders.ForEach(holder => { 
+            CardHolders.ForEach(holder => { 
                 holder.AreCardsMoving = false; 
                 holder.CheckExtraCards(); 
                 HasDealingCard = false; 
